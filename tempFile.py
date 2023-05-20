@@ -1,17 +1,7 @@
-import tkinter
-import customtkinter
+from Models.DateModel import Date
+from Models.TimeModel import Time
 
-customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
-customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+date = Date(11, 30, 2022)
+time = Time(date, 22, 50)
 
-app = customtkinter.CTk()  # create CTk window like you do with the Tk window
-app.geometry("400x240")
-
-def button_function():
-    print("button pressed")
-
-# Use CTkButton instead of tkinter Button
-button = customtkinter.CTkButton(master=app, text="CTkButton", command=button_function)
-button.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
-
-app.mainloop()
+print(date)
