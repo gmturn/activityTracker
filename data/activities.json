@@ -1,0 +1,16 @@
+{
+  "activities": [
+    {
+      "activity": "Muay Thai",
+      "color": "red"
+    },
+    {
+      "activity": "Running",
+      "color": "green"
+    },
+    {
+      "activity": "Bad Activity",
+      "color": "black"
+    }
+  ]
+}
