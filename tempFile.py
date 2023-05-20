@@ -1,7 +1,10 @@
-from Models.DateModel import Date
-from Models.TimeModel import Time
+from Models.EntryModel import Entry
+import datetime
 
-date = Date(11, 30, 2022)
-time = Time(date, 22, 50)
+startDateTime = datetime.datetime(2002, 10, 28, 22, 29, 0)
+endDateTime = datetime.datetime(2002, 10, 29, 0, 4, 0)
 
-print(date)
+
+myEntry = Entry("Muay Thai", startDateTime, endDateTime)
+
+print(myEntry)
