@@ -25,11 +25,17 @@ Total Duration: {self.duration}
 """
         return completeEntry
 
+    def setActivityName(self, activityName):
+        self.activityName = activityName
+
     def setStartTime(self, startDateTime):
         self.startDateTime = startDateTime
 
     def setEndTime(self, endDateTime):
         self.endDateTime = endDateTime
+
+    def getActivityName(self):
+        return self.activityName
 
     def getStartTime(self):
         return self.startDateTime
