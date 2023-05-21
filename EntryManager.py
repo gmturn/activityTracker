@@ -43,6 +43,35 @@ class EntryManager:
             # indent parameter is used to make the output easy to read
             json.dump(data, file, indent=2)
 
+    def removeActivity(self, activity):
+        pass
+
+    def addEntry(self, entry):
+        if not isinstance(entry, Entry):
+            raise ValueError(
+                "Error: EntryManager.addEntry(entry) value is not type Entry.")
+
+        startDateTime = entry.getStartTime()
+        endDateTime = entry.getEndTime()
+        currentDateTime = startDateTime
+
+        while currentDateTime < endDateTime:
+            nextDateTime = self.get_end_of_day_or_entry(
+                currentDateTime, endDateTime)
+            duration = nextDateTime - currentDateTime
+            entryFile = self.get_entry_file_path(currentDateTime)
+            entryData = self.create_entry_data(
+                entry, currentDateTime, nextDateTime, duration)
+
+            data = self.load_or_create_data(entryFile, entryData)
+
+            if self.check_overlap(entryData, data["entries"]):
+                raise ValueError("Error: Overlapping entry.")
+
+            data = self.update_stats(data, entry, duration)
+            self.save_to_file(entryFile, data)
+            currentDateTime += datetime.timedelta(days=1)
+
     def removeEntry(self, entry):
         if not isinstance(entry, Entry):
             raise ValueError(
@@ -79,74 +108,7 @@ class EntryManager:
         if not entry_removed:
             print(f"Entry {entry.getActivityName()} not found.")
 
-    def showActivities(self):
-        with open(self.activitiesJSON, 'r') as file:
-            data = json.load(file)
-
-        for item in data["activities"]:
-            print("Activity: " + colored(item['activity'], item['color']))
-
-    def addEntry(self, entry):
-        if not isinstance(entry, Entry):
-            raise ValueError(
-                "Error: EntryManager.addEntry(entry) value is not type Entry.")
-
-        startDateTime = entry.getStartTime()
-        endDateTime = entry.getEndTime()
-        currentDateTime = startDateTime
-
-        while currentDateTime < endDateTime:
-            nextDateTime = self.get_end_of_day_or_entry(
-                currentDateTime, endDateTime)
-            duration = nextDateTime - currentDateTime
-            entryFile = self.get_entry_file_path(currentDateTime)
-            entryData = self.create_entry_data(
-                entry, currentDateTime, nextDateTime, duration)
-
-            data = self.load_or_create_data(entryFile, entryData)
-
-            if self.check_overlap(entryData, data["entries"]):
-                raise ValueError("Error: Overlapping entry.")
-
-            data = self.update_stats(data, entry, duration)
-            self.save_to_file(entryFile, data)
-            currentDateTime += datetime.timedelta(days=1)
-
-    def get_entry_file_path(self, currentDateTime):
-        entryDirectory = "./data/Entries/"
-        return f"{entryDirectory}{currentDateTime.strftime('%Y-%m-%d')}.json"
-
-    def create_entry_data(self, entry, startDateTime, endDateTime, duration):
-        return {
-            "activity": entry.getActivityName(),
-            "start": str(startDateTime),
-            "end": str(endDateTime),
-            "duration": str(duration)
-        }
-
-    def load_or_create_data(self, entryFile, entryData):
-        if os.path.exists(entryFile):
-            with open(entryFile, 'r') as file:
-                data = json.load(file)
-            data["entries"].append(entryData)
-        else:
-            data = {"entries": [entryData], "stats": self.initialize_stats()}
-        return data
-
-    def initialize_stats(self):
-        return {
-            "totalActivities": 0,
-            "totalDuration": "00:00:00",
-            "uniqueActivities": [],
-            "activityCounts": {},
-            "activityDurations": {}
-        }
-
-    def save_to_file(self, entryFile, data):
-        with open(entryFile, 'w') as file:
-            json.dump(data, file, indent=2)
-
-    def check_overlap(self, new_entry, existing_entries):
+    def checkOverlap(self, new_entry, existing_entries):
         new_start = datetime.datetime.strptime(
             new_entry['start'], '%Y-%m-%d %H:%M:%S')
         new_end = datetime.datetime.strptime(
@@ -163,14 +125,46 @@ class EntryManager:
                 return True
         return False
 
-    def get_end_of_day_or_entry(self, currentDateTime, endDateTime):
+    def getEntryFilePath(self, currentDateTime):
+        entryDirectory = "./data/Entries/"
+        return f"{entryDirectory}{currentDateTime.strftime('%Y-%m-%d')}.json"
+
+    def createEntryData(self, entry, startDateTime, endDateTime, duration):
+        return {
+            "activity": entry.getActivityName(),
+            "start": str(startDateTime),
+            "end": str(endDateTime),
+            "duration": str(duration)
+        }
+
+    def loadOrCreateData(self, entryFile, entryData):
+        if os.path.exists(entryFile):
+            with open(entryFile, 'r') as file:
+                data = json.load(file)
+            data["entries"].append(entryData)
+        else:
+            data = {"entries": [entryData], "stats": self.initialize_stats()}
+        return data
+
+    def initializeStats(self):
+        return {
+            "totalActivities": 0,
+            "totalDuration": "00:00:00",
+            "uniqueActivities": [],
+            "activityCounts": {},
+            "activityDurations": {}
+        }
+
+    def updateStats(self, entryFile):
         pass
 
-    def update_total_duration(self, totalDuration, duration):
-        pass
+    def saveToFile(self, entryFile, data):
+        with open(entryFile, 'w') as file:
+            json.dump(data, file, indent=2)
 
-    def update_activity_data(self, stats, activityName, duration):
-        pass
+    def showActivities(self):
+        with open(self.activitiesJSON, 'r') as file:
+            data = json.load(file)
 
-    def update_stats(self, data, entry, duration):
-        pass
+        for item in data["activities"]:
+            print("Activity: " + colored(item['activity'], item['color']))
