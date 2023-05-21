@@ -27,9 +27,8 @@ class EntryManager:
         # Check if an activity with the same name already exists
         for existing_activity in data['activities']:
             if existing_activity['activity'] == activity:
-                print(
+                raise ValueError(
                     f"Error: An activity with the name '{activity}' already exists.")
-                return
 
         # Append the new activity to the "activities" list
         activityDict = {
@@ -65,13 +64,15 @@ class EntryManager:
             entryData = self.createEntryData(
                 entry, currentDateTime, nextDateTime, duration)
 
-            data = self.loadOrCreateData(entryFile, entryData)
+            data = self.loadOrCreateData(entryFile)
 
             if self.checkOverlap(entryData, data["entries"]):
                 raise ValueError("Error: Overlapping entry.")
 
-            data = self.updateStats(data, entry, duration, "add")
-            self.save_to_file(entryFile, data)
+            data["entries"].append(entryData)  # data is correctly initialized
+
+            data["stats"] = self.updateStats(data, entry, "add")
+            self.saveToFile(entryFile, data)
             currentDateTime += datetime.timedelta(days=1)
 
     def removeEntry(self, entry):
@@ -85,7 +86,7 @@ class EntryManager:
         entry_removed = False
 
         while currentDateTime < endDateTime:
-            entryFile = self.get_entry_file_path(currentDateTime)
+            entryFile = self.getEntryFilePath(currentDateTime)
             if os.path.exists(entryFile):
                 with open(entryFile, 'r') as file:
                     data = json.load(file)
@@ -96,7 +97,7 @@ class EntryManager:
                             data["entries"][i]["end"] == str(entry.getEndTime())):
                         del data["entries"][i]
                         entry_removed = True
-                        self.update_stats(data, entry, entry.getDuration())
+                        self.updateStats(entry, entry.getDuration())
                         break
 
                 if entry_removed:
@@ -108,7 +109,7 @@ class EntryManager:
             currentDateTime += datetime.timedelta(days=1)
 
         if not entry_removed:
-            print(f"Entry {entry.getActivityName()} not found.")
+            raise ValueError(f"Entry {entry.getActivityName()} not found.")
 
     def checkOverlap(self, new_entry, existing_entries):
         new_start = datetime.datetime.strptime(
@@ -139,13 +140,12 @@ class EntryManager:
             "duration": str(duration)
         }
 
-    def loadOrCreateData(self, entryFile, entryData):
+    def loadOrCreateData(self, entryFile):
         if os.path.exists(entryFile):
             with open(entryFile, 'r') as file:
                 data = json.load(file)
-            data["entries"].append(entryData)
         else:
-            data = {"entries": [entryData], "stats": self.initialize_stats()}
+            data = {"entries": [], "stats": self.initializeStats()}
         return data
 
     def initializeStats(self):
@@ -157,56 +157,79 @@ class EntryManager:
             "activityDurations": {}
         }
 
-    def updateStats(self, data, entry, duration, operation):
-        activity = entry.getActivityName()
-        durationStr = str(duration)
-        
-        # initialize the stats if they don't exist
-        if "stats" not in data:
-            data["stats"] = {
-                "totalDuration": "0:00:00",
-                "uniqueActivities": [],
-                "activityCounts": {},
-                "activityDurations": {}
-            }
-    
-        # parse total duration and new duration as timedelta
-        totalDuration = datetime.datetime.strptime(data["stats"]["totalDuration"], "%H:%M:%S") - datetime.datetime(1900, 1, 1)
-        newDuration = datetime.datetime.strptime(durationStr, "%H:%M:%S") - datetime.datetime(1900, 1, 1)
-    
-        # update total duration
-        if operation == "add":
-            totalDuration += newDuration
-        elif operation == "remove":
-            totalDuration -= newDuration
-    
-        # update total duration string in stats
-        data["stats"]["totalDuration"] = str(totalDuration)
-    
-        # update unique activities
-        if activity not in data["stats"]["uniqueActivities"]:
-            data["stats"]["uniqueActivities"].append(activity)
-        
-        # update activity counts and durations
-        if activity not in data["stats"]["activityCounts"]:
-            if operation == "add":
-                data["stats"]["activityCounts"][activity] = 1
-                data["stats"]["activityDurations"][activity] = durationStr
-            elif operation == "remove":
-                print("Error: Trying to remove activity that does not exist.")
-                return data
-        else:
-            if operation == "add":
-                data["stats"]["activityCounts"][activity] += 1
-                activityDuration = datetime.datetime.strptime(data["stats"]["activityDurations"][activity], "%H:%M:%S") - datetime.datetime(1900, 1, 1)
-                activityDuration += newDuration
-                data["stats"]["activityDurations"][activity] = str(activityDuration)
-            elif operation == "remove":
-                data["stats"]["activityCounts"][activity] -= 1
-                if data["stats"]["activityCounts"][activity] == 0:
-                    del data["stats"]["activityCounts"][activity]
-                    del data["stats"]["activityDurations"][activity]
+    def updateStats(self, data, entry, operation):
+        if not isinstance(entry, Entry):
+            raise ValueError(
+                "Error: updateStats was passed an invalid Entry data type")
 
+        totalActivities = self.updateTotalActivities(data)
+        totalDuration = self.updateTotalDuration(data)
+        uniqueActivities = self.updateUniqueActivities(data)
+        activityCounts = self.updateActivityCounts(data)
+        activityDurations = self.updateActivityDurations(data)
+
+        stats = {"totalActivities": totalActivities,
+                 "totalDuration": totalDuration,
+                 "uniqueActivities": uniqueActivities,
+                 "activityCounts": activityCounts,
+                 "activityDurations": activityDurations
+                 }
+        return stats
+
+    def updateTotalActivities(self, data):
+        numActivities = 0
+        for entry in data["entries"]:
+            numActivities += 1
+        return numActivities
+
+    def updateTotalDuration(self, data):
+        totalDuration = datetime.timedelta()
+
+        for entry in data["entries"]:
+            time_object = datetime.datetime.strptime(
+                entry["duration"], "%H:%M:%S")
+            duration = time_object - \
+                datetime.datetime.strptime("00:00:00", "%H:%M:%S")
+            totalDuration += duration
+
+        # Format timedelta as a string
+        total_duration_str = str(totalDuration)
+
+        return total_duration_str
+
+    def updateUniqueActivities(self, data):
+        uniqueActivities = []
+        for entry in data["entries"]:
+            if entry["activity"] not in uniqueActivities:
+                uniqueActivities.append(entry["activity"])
+
+        return uniqueActivities
+
+    def updateActivityCounts(self, data):
+        activityCounts = {}
+        for entry in data["entries"]:
+            if entry["activity"] not in activityCounts:
+                activityCounts[entry["activity"]] = 1
+
+            else:
+                activityCounts[entry["activity"]] += 1
+
+        return activityCounts
+
+    def updateActivityDurations(self, data):
+        activityDurations = {}
+        for entry in data["entries"]:
+            if entry["activity"] not in activityDurations:
+                activityDurations[entry["activity"]] = entry["duration"]
+            else:
+                current_duration = datetime.datetime.strptime(
+                    activityDurations[entry["activity"]], "%H:%M:%S") - datetime.datetime.strptime("00:00:00", "%H:%M:%S")
+                new_duration = datetime.datetime.strptime(
+                    entry["duration"], "%H:%M:%S") - datetime.datetime.strptime("00:00:00", "%H:%M:%S")
+                total_duration = current_duration + new_duration
+                # convert timedelta object to string in format "HH:MM:SS"
+                activityDurations[entry["activity"]] = str(total_duration)
+        return activityDurations
 
     def saveToFile(self, entryFile, data):
         with open(entryFile, 'w') as file:
