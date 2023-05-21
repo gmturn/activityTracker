@@ -40,5 +40,8 @@ Total Duration: {self.duration}
     def getStartTime(self):
         return self.startDateTime
 
-    def getEndTIme(self):
+    def getEndTime(self):
         return self.endDateTime
+
+    def getDuration(self):
+        return self.duration

@@ -6,11 +6,11 @@
     },
     {
       "activity": "Running",
-      "color": "green"
+      "color": "blue"
     },
     {
       "activity": "Bad Activity",
-      "color": "black"
+      "color": "green"
     }
   ]
 }

@@ -1,6 +1,9 @@
 import json
 from colorama import init
 from termcolor import colored
+from Models.EntryModel import Entry
+import os
+import datetime
 
 
 class EntryManager:
@@ -62,3 +65,46 @@ class EntryManager:
 
         for item in data["activities"]:
             print("Activity: " + colored(item['activity'], item['color']))
+
+    def addEntry(self, entry):
+        if not isinstance(entry, Entry):
+            raise ValueError(
+                "Error: EntryManager.addEntry(entry) value is not type Entry.")
+
+        entryDirectory = "./data/Entries/"
+        startDateTime = entry.getStartTime()
+        endDateTime = entry.getEndTime()
+        activityName = entry.getActivityName()
+        currentDateTime = startDateTime
+
+        while currentDateTime < endDateTime:
+            # End of current day or endDateTime, whichever is sooner
+            nextDateTime = min(currentDateTime.replace(
+                hour=23, minute=59, second=59, microsecond=999999), endDateTime)
+
+            # Calculate duration for current day
+            duration = nextDateTime - currentDateTime
+            entryFile = f"{entryDirectory}{currentDateTime.strftime('%Y-%m-%d')}.json"
+
+            # Create the entry for the current day
+            entryData = {
+                "activity": activityName,
+                "start": str(currentDateTime),
+                "end": str(nextDateTime),
+                "duration": str(duration)
+            }
+
+            # If file for the day doesn't exist, create it and initialize with the current entry
+            if not os.path.exists(entryFile):
+                with open(entryFile, 'w') as file:
+                    json.dump({"entries": [entryData]}, file, indent=2)
+            else:
+                # If file for the day exists, append the entry to it
+                with open(entryFile, 'r') as file:
+                    data = json.load(file)
+                data["entries"].append(entryData)
+                with open(entryFile, 'w') as file:
+                    json.dump(data, file, indent=2)
+
+            # Move to the next day
+            currentDateTime += datetime.timedelta(days=1)
