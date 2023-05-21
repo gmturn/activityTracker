@@ -8,19 +8,13 @@
     }
   ],
   "stats": {
-    "totalActivities": 4,
-    "totalDuration": "06:45:00",
-    "uniqueActivities": [
-      "Coding",
-      "Weight Lifting"
-    ],
+    "totalDuration": "2:15:00",
+    "uniqueActivities": ["Coding"],
     "activityCounts": {
-      "Coding": 1,
-      "Weight Lifting": 3
+      "Coding": 1
     },
     "activityDurations": {
-      "Coding": "2:15:00",
-      "Weight Lifting": "04:30:00"
+      "Coding": "2:15:00"
     }
   }
 }

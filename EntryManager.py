@@ -55,20 +55,22 @@ class EntryManager:
         endDateTime = entry.getEndTime()
         currentDateTime = startDateTime
 
-        while currentDateTime < endDateTime:
-            nextDateTime = self.get_end_of_day_or_entry(
+        while currentDateTime < endDateTime:  # loops continuously if entry lasts over the span of multiple days
+            nextDateTime = self.getEndOfDayOrEntry(
                 currentDateTime, endDateTime)
+
             duration = nextDateTime - currentDateTime
-            entryFile = self.get_entry_file_path(currentDateTime)
-            entryData = self.create_entry_data(
+            entryFile = self.getEntryFilePath(currentDateTime)
+
+            entryData = self.createEntryData(
                 entry, currentDateTime, nextDateTime, duration)
 
-            data = self.load_or_create_data(entryFile, entryData)
+            data = self.loadOrCreateData(entryFile, entryData)
 
-            if self.check_overlap(entryData, data["entries"]):
+            if self.checkOverlap(entryData, data["entries"]):
                 raise ValueError("Error: Overlapping entry.")
 
-            data = self.update_stats(data, entry, duration)
+            data = self.updateStats(data, entry, duration, "add")
             self.save_to_file(entryFile, data)
             currentDateTime += datetime.timedelta(days=1)
 
@@ -155,8 +157,56 @@ class EntryManager:
             "activityDurations": {}
         }
 
-    def updateStats(self, entryFile):
-        pass
+    def updateStats(self, data, entry, duration, operation):
+        activity = entry.getActivityName()
+        durationStr = str(duration)
+        
+        # initialize the stats if they don't exist
+        if "stats" not in data:
+            data["stats"] = {
+                "totalDuration": "0:00:00",
+                "uniqueActivities": [],
+                "activityCounts": {},
+                "activityDurations": {}
+            }
+    
+        # parse total duration and new duration as timedelta
+        totalDuration = datetime.datetime.strptime(data["stats"]["totalDuration"], "%H:%M:%S") - datetime.datetime(1900, 1, 1)
+        newDuration = datetime.datetime.strptime(durationStr, "%H:%M:%S") - datetime.datetime(1900, 1, 1)
+    
+        # update total duration
+        if operation == "add":
+            totalDuration += newDuration
+        elif operation == "remove":
+            totalDuration -= newDuration
+    
+        # update total duration string in stats
+        data["stats"]["totalDuration"] = str(totalDuration)
+    
+        # update unique activities
+        if activity not in data["stats"]["uniqueActivities"]:
+            data["stats"]["uniqueActivities"].append(activity)
+        
+        # update activity counts and durations
+        if activity not in data["stats"]["activityCounts"]:
+            if operation == "add":
+                data["stats"]["activityCounts"][activity] = 1
+                data["stats"]["activityDurations"][activity] = durationStr
+            elif operation == "remove":
+                print("Error: Trying to remove activity that does not exist.")
+                return data
+        else:
+            if operation == "add":
+                data["stats"]["activityCounts"][activity] += 1
+                activityDuration = datetime.datetime.strptime(data["stats"]["activityDurations"][activity], "%H:%M:%S") - datetime.datetime(1900, 1, 1)
+                activityDuration += newDuration
+                data["stats"]["activityDurations"][activity] = str(activityDuration)
+            elif operation == "remove":
+                data["stats"]["activityCounts"][activity] -= 1
+                if data["stats"]["activityCounts"][activity] == 0:
+                    del data["stats"]["activityCounts"][activity]
+                    del data["stats"]["activityDurations"][activity]
+
 
     def saveToFile(self, entryFile, data):
         with open(entryFile, 'w') as file:
@@ -168,3 +218,6 @@ class EntryManager:
 
         for item in data["activities"]:
             print("Activity: " + colored(item['activity'], item['color']))
+
+    def getEndOfDayOrEntry(self, currentDateTime, endDateTime):
+        return min(currentDateTime.replace(hour=23, minute=59, second=59, microsecond=999999), endDateTime)
