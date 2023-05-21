@@ -10,9 +10,3 @@ myEntry = Entry("Weight Lifting", startDateTime, endDateTime)
 
 
 myManager = EntryManager.EntryManager()
-
-
-myManager.addEntry(myEntry)
-
-
-print(myEntry.getStartTime())
