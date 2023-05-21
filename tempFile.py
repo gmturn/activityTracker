@@ -11,4 +11,4 @@ myEntry2 = Entry("Weight Lifting", startDateTime, endDateTime)
 
 
 myManager = EntryManager.EntryManager()
-myManager.addEntry(myEntry2)
+myManager.removeEntry(myEntry2)

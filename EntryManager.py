@@ -43,21 +43,41 @@ class EntryManager:
             # indent parameter is used to make the output easy to read
             json.dump(data, file, indent=2)
 
-    def removeActivity(self, activityName):
-        with open(self.activitiesJSON, 'r') as file:
-            data = json.load(file)
+    def removeEntry(self, entry):
+        if not isinstance(entry, Entry):
+            raise ValueError(
+                "Error: EntryManager.removeEntry(entry) value is not type Entry.")
 
-         # Filter the "activities" list to remove the specified activity
-        try:
-            data["activities"] = [activity for activity in data['activities']
-                                  if activity['activity'] != activityName]
-        except:
-            print(f"Error: Could not remove {activityName}. Does not exist.")
+        startDateTime = entry.getStartTime()
+        endDateTime = entry.getEndTime()
+        currentDateTime = startDateTime
+        entry_removed = False
 
-        # Open the file in write mode and write the updated JSON data
-        with open(self.activitiesJSON, 'w') as file:
-            # indent parameter is used to make the output easy to read
-            json.dump(data, file, indent=2)
+        while currentDateTime < endDateTime:
+            entryFile = self.get_entry_file_path(currentDateTime)
+            if os.path.exists(entryFile):
+                with open(entryFile, 'r') as file:
+                    data = json.load(file)
+
+                for i in range(len(data["entries"])):
+                    if (data["entries"][i]["activity"] == entry.getActivityName() and
+                        data["entries"][i]["start"] == str(entry.getStartTime()) and
+                            data["entries"][i]["end"] == str(entry.getEndTime())):
+                        del data["entries"][i]
+                        entry_removed = True
+                        self.update_stats(data, entry, entry.getDuration())
+                        break
+
+                if entry_removed:
+                    # update the stats here as needed
+                    with open(entryFile, 'w') as file:
+                        json.dump(data, file, indent=2)
+                    break
+
+            currentDateTime += datetime.timedelta(days=1)
+
+        if not entry_removed:
+            print(f"Entry {entry.getActivityName()} not found.")
 
     def showActivities(self):
         with open(self.activitiesJSON, 'r') as file:
@@ -82,13 +102,15 @@ class EntryManager:
             entryFile = self.get_entry_file_path(currentDateTime)
             entryData = self.create_entry_data(
                 entry, currentDateTime, nextDateTime, duration)
+
             data = self.load_or_create_data(entryFile, entryData)
+
+            if self.check_overlap(entryData, data["entries"]):
+                raise ValueError("Error: Overlapping entry.")
+
             data = self.update_stats(data, entry, duration)
             self.save_to_file(entryFile, data)
             currentDateTime += datetime.timedelta(days=1)
-
-    def get_end_of_day_or_entry(self, currentDateTime, endDateTime):
-        return min(currentDateTime.replace(hour=23, minute=59, second=59, microsecond=999999), endDateTime)
 
     def get_entry_file_path(self, currentDateTime):
         entryDirectory = "./data/Entries/"
@@ -120,42 +142,35 @@ class EntryManager:
             "activityDurations": {}
         }
 
-    def update_stats(self, data, entry, duration):
-        data["stats"]["totalActivities"] += 1
-        # You can create methods to update the total duration and activity data
-        data["stats"]["totalDuration"] = self.update_total_duration(
-            data["stats"]["totalDuration"], duration)
-        data["stats"] = self.update_activity_data(
-            data["stats"], entry.getActivityName(), duration)
-        return data
-
     def save_to_file(self, entryFile, data):
         with open(entryFile, 'w') as file:
             json.dump(data, file, indent=2)
 
-    def update_total_duration(self, totalDuration, duration):
-        # totalDuration is a string in the format "HH:MM:SS"
-        total_seconds = datetime.timedelta(hours=int(totalDuration.split(':')[0]),
-                                           minutes=int(
-                                               totalDuration.split(':')[1]),
-                                           seconds=int(totalDuration.split(':')[2])).total_seconds()
-        total_seconds += duration.total_seconds()
-        updated_duration = datetime.timedelta(seconds=total_seconds)
+    def check_overlap(self, new_entry, existing_entries):
+        new_start = datetime.datetime.strptime(
+            new_entry['start'], '%Y-%m-%d %H:%M:%S')
+        new_end = datetime.datetime.strptime(
+            new_entry['end'], '%Y-%m-%d %H:%M:%S')
 
-        # Convert updated_duration back to "HH:MM:SS" format
-        hours, remainder = divmod(updated_duration.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        return f"{hours:02}:{minutes:02}:{seconds:02}"
+        for entry in existing_entries:
+            existing_start = datetime.datetime.strptime(
+                entry['start'], '%Y-%m-%d %H:%M:%S')
+            existing_end = datetime.datetime.strptime(
+                entry['end'], '%Y-%m-%d %H:%M:%S')
+
+            # Check for overlap
+            if (new_start < existing_end) and (existing_start < new_end):
+                return True
+        return False
+
+    def get_end_of_day_or_entry(self, currentDateTime, endDateTime):
+        pass
+
+    def update_total_duration(self, totalDuration, duration):
+        pass
 
     def update_activity_data(self, stats, activityName, duration):
-        if activityName not in stats["uniqueActivities"]:
-            stats["uniqueActivities"].append(activityName)
-            stats["activityCounts"][activityName] = 1
-            stats["activityDurations"][activityName] = str(duration)
-        else:
-            stats["activityCounts"][activityName] += 1
-            current_activity_duration = stats["activityDurations"][activityName]
-            updated_activity_duration = self.update_total_duration(
-                current_activity_duration, duration)
-            stats["activityDurations"][activityName] = updated_activity_duration
-        return stats
+        pass
+
+    def update_stats(self, data, entry, duration):
+        pass
