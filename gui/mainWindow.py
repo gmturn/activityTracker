@@ -26,7 +26,7 @@ class MainWindow(ctk.CTk):
         self.iconbitmap("./images/AccelActivityIcon.ico")
 
         self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure((2, 3), weight=0)
+        # self.grid_columnconfigure((2, 3), weight=0) # not sure what this does
         self.grid_rowconfigure((0, 1, 2), weight=1)
 
         # create sidebar frame with widgets

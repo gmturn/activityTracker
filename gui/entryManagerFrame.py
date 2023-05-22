@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from tkinter import StringVar, Label, Entry
 from managers.EntryManager import EntryManager
+from tkinter import *
+from tkcalendar import Calendar
 
 
 class EntryManagerFrame(ctk.CTkFrame):
@@ -8,34 +10,23 @@ class EntryManagerFrame(ctk.CTkFrame):
         ctk.CTkFrame.__init__(self, parent, *args, **kwargs)
 
         self.entryManager = EntryManager()
+        self.mainTabView = ctk.CTkTabview(self)
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure((1, 1), weight=1)
+
+        self.mainTabView.add("Tab 1")
+        self.mainTabView.add("Tab 2")
+        self.mainTabView.add("Tab 3")
+        self.mainTabView.set("Tab 1")  # sets default to tab 1
+
+        self.mainTabView.grid(row=0, column=0, padx=20, pady=10, sticky="NESW")
+
+        button = ctk.CTkButton(self.mainTabView.tab(
+            "Tab 1"), text="Tab 1 Button")
+        button.pack(padx=20, pady=20)
 
         # Set up your frame layout and widgets here
 
-        self.activity_label = ctk.CTkLabel(self, text="Activity")
-        self.activity_label.pack()  # adjust as needed
-
-        self.activity_var = StringVar()
-        self.activity_entry = ctk.CTkEntry(
-            self, textvariable=self.activity_var)
-        self.activity_entry.pack()  # adjust as needed
-
-        self.color_label = ctk.CTkLabel(self, text="Color")
-        self.color_label.pack()  # adjust as needed
-
-        self.color_var = StringVar()
-        self.color_entry = ctk.CTkEntry(self, textvariable=self.color_var)
-        self.color_entry.pack()  # adjust as needed
-
         # Set up buttons and bind them to functions to add or remove entries
-        # ...
-
-    def add_entry(self):
-        activity = self.activity_var.get()
-        color = self.color_var.get()
-        self.entryManager.addActivity(activity, color)
-        # add additional processing and error handling as needed
-
-    def remove_entry(self):
-        activity = self.activity_var.get()
-        self.entryManager.removeActivity(activity)
-        # add additional processing and error handling as needed
