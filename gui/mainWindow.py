@@ -10,7 +10,7 @@ ctk.set_appearance_mode("System")
 
 # Sets the color of the widgets
 # Supported themes: green, dark-blue, blue
-ctk.set_default_color_theme("green")
+ctk.set_default_color_theme("blue")
 
 # Create App class
 
@@ -27,7 +27,7 @@ class MainWindow(ctk.CTk):
 
         self.grid_columnconfigure(1, weight=1)
         # self.grid_columnconfigure((2, 3), weight=0) # not sure what this does
-        self.grid_rowconfigure((0, 1, 2), weight=1)
+        self.grid_rowconfigure((0, 1), weight=1)
 
         # create sidebar frame with widgets
         self.sidebar_frame = ctk.CTkFrame(
