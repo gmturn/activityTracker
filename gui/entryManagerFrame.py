@@ -10,21 +10,23 @@ class EntryManagerFrame(ctk.CTkFrame):
         ctk.CTkFrame.__init__(self, parent, *args, **kwargs)
 
         self.entryManager = EntryManager()
-        self.mainTabView = ctk.CTkTabview(self)
+        self.mainTabView = ctk.CTkTabview(self, width=500)
 
+        # Setting frame grid size, not too sure how it works
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure((1, 1), weight=1)
 
-        self.mainTabView.add("Tab 1")
+        self.mainTabView.add("Add Entry")
         self.mainTabView.add("Tab 2")
         self.mainTabView.add("Tab 3")
-        self.mainTabView.set("Tab 1")  # sets default to tab 1
+        self.mainTabView.set("Add Entry")  # sets default to tab 1
 
-        self.mainTabView.grid(row=0, column=0, padx=20, pady=10, sticky="NESW")
+        self.mainTabView.grid(row=0, column=0, padx=(
+            20, 0), pady=(20, 0), sticky="NESW")  # sets location of the entire tab
 
         button = ctk.CTkButton(self.mainTabView.tab(
-            "Tab 1"), text="Tab 1 Button")
+            "Add Entry"), text="Add Entry Button")
         button.pack(padx=20, pady=20)
 
         # Set up your frame layout and widgets here
