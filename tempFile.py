@@ -1,12 +1,12 @@
 from Models.EntryModel import Entry
 import datetime
-import EntryManager
+import managers.EntryManager as EntryManager
 
-startDateTime = datetime.datetime(2002, 10, 28, 16, 0, 0)
-endDateTime = datetime.datetime(2002, 10, 28, 19, 30, 0)
+startDateTime = datetime.datetime(2023, 5, 21, 2, 0, 0)
+endDateTime = datetime.datetime(2023, 5, 21, 4, 30, 0)
 
 
-myEntry2 = Entry("Weight Lifting", startDateTime, endDateTime)
+myEntry2 = Entry("Coding", startDateTime, endDateTime)
 
 
 myManager = EntryManager.EntryManager()

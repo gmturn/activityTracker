@@ -5,12 +5,20 @@
       "color": "red"
     },
     {
-      "activity": "Running",
+      "activity": "Weight Lifting",
       "color": "blue"
     },
     {
-      "activity": "Bad Activity",
+      "activity": "Running",
       "color": "green"
+    },
+    {
+      "activity": "Sleeping",
+      "color": "black"
+    },
+    {
+      "activity": "Reading",
+      "color": "purple"
     }
   ]
 }
