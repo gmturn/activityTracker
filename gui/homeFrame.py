@@ -9,7 +9,7 @@ class HomeFrame(ctk.CTkFrame):
 
         # Set up your frame layout and widgets here
 
-        self.activity_label = Label(self, text="Home")
+        self.activity_label = ctk.CTkLabel(self, text="Home")
         self.activity_label.pack()  # adjust as needed
 
         # Set up buttons and bind them to functions to add or remove entries

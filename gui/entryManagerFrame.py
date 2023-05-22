@@ -11,18 +11,19 @@ class EntryManagerFrame(ctk.CTkFrame):
 
         # Set up your frame layout and widgets here
 
-        self.activity_label = Label(self, text="Activity")
+        self.activity_label = ctk.CTkLabel(self, text="Activity")
         self.activity_label.pack()  # adjust as needed
 
         self.activity_var = StringVar()
-        self.activity_entry = Entry(self, textvariable=self.activity_var)
+        self.activity_entry = ctk.CTkEntry(
+            self, textvariable=self.activity_var)
         self.activity_entry.pack()  # adjust as needed
 
-        self.color_label = Label(self, text="Color")
+        self.color_label = ctk.CTkLabel(self, text="Color")
         self.color_label.pack()  # adjust as needed
 
         self.color_var = StringVar()
-        self.color_entry = Entry(self, textvariable=self.color_var)
+        self.color_entry = ctk.CTkEntry(self, textvariable=self.color_var)
         self.color_entry.pack()  # adjust as needed
 
         # Set up buttons and bind them to functions to add or remove entries
