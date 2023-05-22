@@ -1,5 +1,8 @@
 # Import customtkinter module
+from PIL import Image
 import customtkinter as ctk
+from gui.entryManagerFrame import EntryManagerFrame
+from gui.homeFrame import HomeFrame
 
 # Sets the appearance mode of the application
 # "System" sets the appearance same as that of the system
@@ -36,14 +39,21 @@ class MainWindow(ctk.CTk):
             self.sidebar_frame, text="Main Menu", font=ctk.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
-        self.sidebar_button_1 = ctk.CTkButton(
-            self.sidebar_frame, text="Entry Manager")
-        self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = ctk.CTkButton(
-            self.sidebar_frame, text="Entry Visualizer")
-        self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
+        # Home Button
+        self.sidebar_Home = ctk.CTkButton(
+            self.sidebar_frame, text="Home", command=self.home_button_event)
+        self.sidebar_Home.grid(row=1, column=0, padx=20, pady=10)
+
+        # Entry Manager Button
+        self.sidebar_EntryManager = ctk.CTkButton(
+            self.sidebar_frame, text="Entry Manager", command=self.entry_manager_button_event)
+        self.sidebar_EntryManager.grid(row=2, column=0, padx=20, pady=10)
+
+        # Button 3
         self.sidebar_button_3 = ctk.CTkButton(self.sidebar_frame)
         self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
+
+        # Appearance Mode Button
         self.appearance_mode_label = ctk.CTkLabel(
             self.sidebar_frame, text="Appearance Mode:", anchor="w")
         self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
@@ -52,6 +62,40 @@ class MainWindow(ctk.CTk):
         self.appearance_mode_optionemenu.grid(
             row=6, column=0, padx=20, pady=(10, 10))
         self.appearance_mode_optionemenu.set("System")  # sets default
+
+        # instantiate EntryManagerFrame
+        self.HomeFrame = HomeFrame(self)
+        self.HomeFrame.grid(row=0, column=1, sticky="nsew")
+        self.HomeFrame.grid_remove()  # initially hidden
+
+        # instantiate EntryManagerFrame
+        self.entryManagerFrame = EntryManagerFrame(self)
+        self.entryManagerFrame.grid(row=0, column=1, sticky="nsew")
+        self.entryManagerFrame.grid_remove()  # initially hidden
+
+    def select_frame_by_name(self, name):
+        # set button color for selected button
+        # self.sidebar_Home.configure(
+        #     fg_color=("gray75", "gray25") if name == "home" else "transparent")
+        # self.sidebar_EntryManager.configure(
+        #     fg_color=("gray75", "gray25") if name == "entry_manager" else "transparent")
+
+        # show selected frame
+        if name == "home":
+            self.HomeFrame.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.HomeFrame.grid_forget()
+
+        if name == "entry_manager":
+            self.entryManagerFrame.grid()
+        else:
+            self.entryManagerFrame.grid_remove()
+
+    def home_button_event(self):
+        self.select_frame_by_name("home")
+
+    def entry_manager_button_event(self):
+        self.select_frame_by_name("entry_manager")
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         ctk.set_appearance_mode(new_appearance_mode)
