@@ -3,7 +3,7 @@ from gui import MainWindow
 try:
     from ctypes import windll
 
-    windll.shcore.SetProcessDpiAwareness(1)
+    windll.shcore.SetProcessDpiAwareness(2)
 except:
     pass
 

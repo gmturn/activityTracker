@@ -17,6 +17,7 @@ class MainWindow(ctk.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 # Sets the title of our window to "App"
-        self.title("App")
+        self.title("Activity Tracker")
 # Dimensions of the window will be 200x200
         self.geometry("200x200")
+        self.iconbitmap("./images/AccelActivityIcon.ico")
