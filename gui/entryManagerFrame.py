@@ -29,9 +29,7 @@ class EntryManagerFrame(ctk.CTkFrame):
             20, 0), pady=(20, 0), sticky="NESW")  # sets location of the entire tab
 
         # Formatting Tab View
-        self.mainTabView.grid_columnconfigure(0, weight=1)
-        self.mainTabView.grid_columnconfigure(1, weight=1)
-        self.mainTabView.grid_columnconfigure(2, weight=1)
+        self.mainTabView.grid_columnconfigure((0, 1, 2), weight=1)
 
         # Adding Add Entry Label
         addEntryLabel = ctk.CTkLabel(
@@ -44,7 +42,27 @@ class EntryManagerFrame(ctk.CTkFrame):
         activtyLabel.grid(row=1, column=0, padx=20)
         self.activityOptionMenu = ctk.CTkOptionMenu(self.mainTabView.tab("Add Entry"), dynamic_resizing=False,
                                                     values=["Activity 1", "Activity 2", "Activity 3"])
-        self.activityOptionMenu.grid(row=2, column=0, padx=20)
+        self.activityOptionMenu.grid(row=2, column=0, padx=50)
+
+        # Adding Start Date and Time Section
+        activtyLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for teh activity drop down
+            "Add Entry"), text="Select Start Date:")
+        activtyLabel.grid(row=1, column=1, padx=50)
+        self.calendar = Calendar(self.mainTabView.tab(  # creating the label for teh activity drop down
+            "Add Entry"), selectmode='day',
+            year=2023, month=5,
+            day=22)
+        self.calendar.grid(row=2, column=1)
+
+        # Adding End Date and Time Section
+        activtyLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for teh activity drop down
+            "Add Entry"), text="Select End Date:")
+        activtyLabel.grid(row=1, column=2, padx=50)
+        self.calendar = Calendar(self.mainTabView.tab(  # creating the label for teh activity drop down
+            "Add Entry"), selectmode='day',
+            year=2023, month=5,
+            day=22)
+        self.calendar.grid(row=2, column=2)
 
         # Adding Add Entry Button
         button = ctk.CTkButton(self.mainTabView.tab(
