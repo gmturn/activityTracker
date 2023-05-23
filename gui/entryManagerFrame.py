@@ -37,7 +37,7 @@ class EntryManagerFrame(ctk.CTkFrame):
         addEntryLabel.grid(row=0, column=1, padx=20, pady=20)
 
         # Adding Activity Section
-        activtyLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for teh activity drop down
+        activtyLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for the activity drop down
             "Add Entry"), text="Activity Name:")
         activtyLabel.grid(row=1, column=0, padx=20)
         self.activityOptionMenu = ctk.CTkOptionMenu(self.mainTabView.tab("Add Entry"), dynamic_resizing=False,
@@ -68,7 +68,3 @@ class EntryManagerFrame(ctk.CTkFrame):
         button = ctk.CTkButton(self.mainTabView.tab(
             "Add Entry"), text="Add Entry", font=ctk.CTkFont(size=18, weight="bold"))
         button.grid(row=4, column=1, padx=20, pady=20)
-
-        # Set up your frame layout and widgets here
-
-        # Set up buttons and bind them to functions to add or remove entries
