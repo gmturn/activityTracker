@@ -66,7 +66,6 @@ class MainWindow(ctk.CTk):
         # instantiate EntryManagerFrame
         self.HomeFrame = HomeFrame(self)
         self.HomeFrame.grid(row=0, column=1, sticky="nsew")
-        self.HomeFrame.grid_remove()  # initially hidden
 
         # instantiate EntryManagerFrame
         self.entryManagerFrame = EntryManagerFrame(self)
