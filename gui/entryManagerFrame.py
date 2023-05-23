@@ -19,6 +19,7 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.grid_rowconfigure(3, weight=1)
         self.grid_rowconfigure(4, weight=1)
 
+        # Adding Tab View
         self.mainTabView.add("Add Entry")
         self.mainTabView.add("Tab 2")
         self.mainTabView.add("Tab 3")
@@ -27,24 +28,27 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.mainTabView.grid(row=0, column=0, padx=(
             20, 0), pady=(20, 0), sticky="NESW")  # sets location of the entire tab
 
+        # Formatting Tab View
         self.mainTabView.grid_columnconfigure(0, weight=1)
         self.mainTabView.grid_columnconfigure(1, weight=1)
         self.mainTabView.grid_columnconfigure(2, weight=1)
 
-        mainLabel = ctk.CTkLabel(
+        # Adding Add Entry Label
+        addEntryLabel = ctk.CTkLabel(
             self.mainTabView.tab("Add Entry"), text="Add an Entry", font=ctk.CTkFont(size=20, weight="bold"))
-        mainLabel.grid(row=0, column=1, padx=20, pady=20)
+        addEntryLabel.grid(row=0, column=1, padx=20, pady=20)
 
+        # Adding Activity Section
         activtyLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for teh activity drop down
             "Add Entry"), text="Activity Name:")
         activtyLabel.grid(row=1, column=0, padx=20)
-
         self.activityOptionMenu = ctk.CTkOptionMenu(self.mainTabView.tab("Add Entry"), dynamic_resizing=False,
                                                     values=["Activity 1", "Activity 2", "Activity 3"])
         self.activityOptionMenu.grid(row=2, column=0, padx=20)
 
+        # Adding Add Entry Button
         button = ctk.CTkButton(self.mainTabView.tab(
-            "Add Entry"), text="Add Entry Button")
+            "Add Entry"), text="Add Entry", font=ctk.CTkFont(size=18, weight="bold"))
         button.grid(row=4, column=1, padx=20, pady=20)
 
         # Set up your frame layout and widgets here
