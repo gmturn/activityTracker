@@ -37,8 +37,10 @@ class EntryManagerFrame(ctk.CTkFrame):
         activtyLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for the activity drop down
             "Add Entry"), text="Activity Name:")
         activtyLabel.grid(row=1, column=0, padx=20)
+        activities = self.entryManager.getActivityList()
+        activities.sort()
         self.activityOptionMenu = ctk.CTkOptionMenu(self.mainTabView.tab("Add Entry"), dynamic_resizing=False,
-                                                    values=["Activity 1", "Activity 2", "Activity 3"])
+                                                    values=activities)
         self.activityOptionMenu.grid(row=2, column=0, padx=50)
 
         # Adding Start Date and Time Section

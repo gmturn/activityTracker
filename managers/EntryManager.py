@@ -45,6 +45,13 @@ class EntryManager:
         with open(self.activitiesJSON, 'r') as file:
             return json.load(file)
 
+    def getActivityList(self):
+        data = self.loadActivities()
+        activities = []
+        for activity in data["activities"]:
+            activities.append(activity["activity"])
+        return activities
+
     def saveActivities(self, data):
         with open(self.activitiesJSON, 'w') as file:
             json.dump(data, file, indent=2)
