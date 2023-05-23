@@ -14,14 +14,11 @@ class EntryManagerFrame(ctk.CTkFrame):
 
         # Setting frame grid size, not too sure how it works
         self.grid_columnconfigure((0, 1), weight=1)
-        self.grid_rowconfigure(1, weight=1)
-        self.grid_rowconfigure(2, weight=1)
-        self.grid_rowconfigure(3, weight=1)
-        self.grid_rowconfigure(4, weight=1)
+        self.grid_rowconfigure((1, 2, 3, 4, 5), weight=1)
 
         # Adding Tab View
         self.mainTabView.add("Add Entry")
-        self.mainTabView.add("Tab 2")
+        self.mainTabView.add("Remove Entry")
         self.mainTabView.add("Tab 3")
         self.mainTabView.set("Add Entry")  # sets default to tab 1
 
@@ -67,4 +64,4 @@ class EntryManagerFrame(ctk.CTkFrame):
         # Adding Add Entry Button
         button = ctk.CTkButton(self.mainTabView.tab(
             "Add Entry"), text="Add Entry", font=ctk.CTkFont(size=18, weight="bold"))
-        button.grid(row=4, column=1, padx=20, pady=20)
+        button.grid(row=5, column=1, padx=20, pady=20)
