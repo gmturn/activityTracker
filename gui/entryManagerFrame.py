@@ -58,6 +58,48 @@ class EntryManagerFrame(ctk.CTkFrame):
             "Add Entry"), text="Select Start Time:")
         startTimeLabel.grid(row=3, column=1, padx=50)
 
+        # Setting up a smaller frame for the start time
+        startTimeFrame = ctk.CTkFrame(self.mainTabView.tab("Add Entry"))
+        startHourMenu = ctk.CTkOptionMenu(
+            startTimeFrame, values=[str(i) for i in range(1, 13)])
+        startHourMenu.grid(row=0, column=0)
+        startHourMenu.set("Hour")
+
+        startMinuteMenu = ctk.CTkOptionMenu(
+            startTimeFrame, values=[str(i) for i in range(0, 60, 5)])
+        startMinuteMenu.grid(row=0, column=1)
+        startMinuteMenu.set("Minutes")
+
+        start_am_pm = ctk.StringVar(value="am")
+        start_am_pmSwitch = ctk.CTkSwitch(
+            startTimeFrame, text="AM / PM", variable=start_am_pm, offvalue="am", onvalue="pm")
+        start_am_pmSwitch.grid(row=1, column=0, columnspan=2)
+
+        startTimeFrame.grid(row=4, column=1, padx=10)
+
+        # Setting up a smaller frame for end time
+        endTimeLabel = ctk.CTkLabel(self.mainTabView.tab(
+            "Add Entry"), text="Select End Time:")
+        endTimeLabel.grid(row=3, column=2, padx=10)
+
+        endTimeFrame = ctk.CTkFrame(self.mainTabView.tab("Add Entry"))
+
+        endHourMenu = ctk.CTkOptionMenu(
+            endTimeFrame, values=[str(i) for i in range(1, 13)])
+        endHourMenu.grid(row=0, column=0)
+        endHourMenu.set("Hour")
+
+        endMinuteMenu = ctk.CTkOptionMenu(
+            endTimeFrame, values=[str(i) for i in range(0, 60, 5)])
+        endMinuteMenu.grid(row=0, column=1)
+        endMinuteMenu.set("Minutes")
+
+        end_am_pm = ctk.StringVar(value="am")
+        end_am_pmSwitch = ctk.CTkSwitch(
+            endTimeFrame, text="AM / PM", variable=end_am_pm, offvalue="am", onvalue="pm")
+        end_am_pmSwitch.grid(row=1, column=0, columnspan=2)
+        endTimeFrame.grid(row=4, column=2, padx=10)
+
         # Adding End Date and Time Section
         endDateLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for the End Date calendar
             "Add Entry"), text="Select End Date:")
