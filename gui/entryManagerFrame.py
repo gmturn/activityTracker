@@ -44,20 +44,24 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.activityOptionMenu.grid(row=2, column=0, padx=50)
 
         # Adding Start Date and Time Section
-        activtyLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for teh activity drop down
+        startDateLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for the Start Date calendar
             "Add Entry"), text="Select Start Date:")
-        activtyLabel.grid(row=1, column=1, padx=50)
-        self.calendar = Calendar(self.mainTabView.tab(  # creating the label for teh activity drop down
+        startDateLabel.grid(row=1, column=1, padx=50)
+        self.calendar = Calendar(self.mainTabView.tab(
             "Add Entry"), selectmode='day',
             year=2023, month=5,
             day=22)
         self.calendar.grid(row=2, column=1)
 
+        startTimeLabel = ctk.CTkLabel(self.mainTabView.tab(
+            "Add Entry"), text="Select Start Time:")
+        startTimeLabel.grid(row=3, column=1, padx=50)
+
         # Adding End Date and Time Section
-        activtyLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for the activity drop down
+        endDateLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for the End Date calendar
             "Add Entry"), text="Select End Date:")
-        activtyLabel.grid(row=1, column=2, padx=50)
-        self.calendar = Calendar(self.mainTabView.tab(  # creating the label for the activity drop down
+        endDateLabel.grid(row=1, column=2, padx=50)
+        self.calendar = Calendar(self.mainTabView.tab(
             "Add Entry"), selectmode='day',
             year=2023, month=5,
             day=22)
