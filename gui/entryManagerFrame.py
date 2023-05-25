@@ -40,39 +40,43 @@ class EntryManagerFrame(ctk.CTkFrame):
         activtyLabel.grid(row=1, column=0, padx=20)
         activities = self.entryManager.getActivityList()
         activities.sort()
-        self.activityOptionMenu = ctk.CTkOptionMenu(self.mainTabView.tab("Add Entry"), dynamic_resizing=False,
-                                                    values=activities)
-        self.activityOptionMenu.grid(row=2, column=0, padx=50)
+        self.activityVar = ctk.StringVar()
+        self.activityVar.set("Choose Activity")
+        activityOptionMenu = ctk.CTkOptionMenu(self.mainTabView.tab("Add Entry"), dynamic_resizing=False,
+                                               values=activities, variable=self.activityVar)
+        activityOptionMenu.grid(row=2, column=0, padx=50)
 
         # Adding Start Date and Time Section
         startDateLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for the Start Date calendar
             "Add Entry"), text="Select Start Date:")
         startDateLabel.grid(row=1, column=1, padx=50)
-        self.calendar = Calendar(self.mainTabView.tab(
+        self.startCalendar = Calendar(self.mainTabView.tab(
             "Add Entry"), selectmode='day',
             year=getCurrentYearYYYY(), month=getCurrentMonth(),
             day=getCurrentDay())
-        self.calendar.grid(row=2, column=1)
+        self.startCalendar.grid(row=2, column=1)
 
         startTimeLabel = ctk.CTkLabel(self.mainTabView.tab(
             "Add Entry"), text="Select Start Time:")
         startTimeLabel.grid(row=3, column=1, padx=50)
 
         # Setting up a smaller frame for the start time
+        self.startHourVar = ctk.IntVar()
         startTimeFrame = ctk.CTkFrame(self.mainTabView.tab("Add Entry"))
         startHourMenu = ctk.CTkOptionMenu(
-            startTimeFrame, values=[str(i) for i in range(1, 13)])
+            startTimeFrame, values=[str(i) for i in range(1, 13)], variable=self.startHourVar)
         startHourMenu.grid(row=0, column=0)
         startHourMenu.set("Hour")
 
+        self.startMinuteVar = ctk.IntVar()
         startMinuteMenu = ctk.CTkOptionMenu(
-            startTimeFrame, values=[str(i) for i in range(0, 60, 5)])
+            startTimeFrame, values=[str(i) for i in range(0, 60, 5)], variable=self.startMinuteVar)
         startMinuteMenu.grid(row=0, column=1)
         startMinuteMenu.set("Minutes")
 
-        start_am_pm = ctk.StringVar(value="am")
+        self.start_am_pm = ctk.StringVar(value="am")
         start_am_pmSwitch = ctk.CTkSwitch(
-            startTimeFrame, text="AM / PM", variable=start_am_pm, offvalue="am", onvalue="pm")
+            startTimeFrame, text="AM / PM", variable=self.start_am_pm, offvalue="am", onvalue="pm")
         start_am_pmSwitch.grid(row=1, column=0, columnspan=2)
 
         startTimeFrame.grid(row=4, column=1, padx=10)
@@ -84,19 +88,21 @@ class EntryManagerFrame(ctk.CTkFrame):
 
         endTimeFrame = ctk.CTkFrame(self.mainTabView.tab("Add Entry"))
 
+        self.endHourVar = ctk.IntVar()
         endHourMenu = ctk.CTkOptionMenu(
-            endTimeFrame, values=[str(i) for i in range(1, 13)])
+            endTimeFrame, values=[str(i) for i in range(1, 13)], variable=self.endHourVar)
         endHourMenu.grid(row=0, column=0)
         endHourMenu.set("Hour")
 
+        self.endMinuteVar = ctk.IntVar()
         endMinuteMenu = ctk.CTkOptionMenu(
-            endTimeFrame, values=[str(i) for i in range(0, 60, 5)])
+            endTimeFrame, values=[str(i) for i in range(0, 60, 5)], variable=self.endMinuteVar)
         endMinuteMenu.grid(row=0, column=1)
         endMinuteMenu.set("Minutes")
 
-        end_am_pm = ctk.StringVar(value="am")
+        self.end_am_pm = ctk.StringVar(value="am")
         end_am_pmSwitch = ctk.CTkSwitch(
-            endTimeFrame, text="AM / PM", variable=end_am_pm, offvalue="am", onvalue="pm")
+            endTimeFrame, text="AM / PM", variable=self.end_am_pm, offvalue="am", onvalue="pm")
         end_am_pmSwitch.grid(row=1, column=0, columnspan=2)
         endTimeFrame.grid(row=4, column=2, padx=10)
 
@@ -104,13 +110,20 @@ class EntryManagerFrame(ctk.CTkFrame):
         endDateLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for the End Date calendar
             "Add Entry"), text="Select End Date:")
         endDateLabel.grid(row=1, column=2, padx=50)
-        self.calendar = Calendar(self.mainTabView.tab(
+        self.endCalendar = Calendar(self.mainTabView.tab(
             "Add Entry"), selectmode='day',
             year=getCurrentYearYYYY(), month=getCurrentMonth(),
             day=getCurrentDay())
-        self.calendar.grid(row=2, column=2)
+        self.endCalendar.grid(row=2, column=2)
 
         # Adding Add Entry Button
         button = ctk.CTkButton(self.mainTabView.tab(
-            "Add Entry"), text="Add Entry", font=ctk.CTkFont(size=18, weight="bold"))
+            "Add Entry"), text="Add Entry", font=ctk.CTkFont(size=18, weight="bold"), command=self.getEntryDetails)
         button.grid(row=5, column=1, padx=20, pady=20)
+
+    def getEntryDetails(self):
+        print(f"Activity: {self.activityVar.get()}")
+        print(
+            f"Start Time: {self.startHourVar.get()}:{self.startMinuteVar.get()}{self.start_am_pm.get()} {self.startCalendar.get_date()}")
+        print(
+            f"End Time: {self.endHourVar.get()}:{self.endMinuteVar.get()}{self.end_am_pm.get()} {self.endCalendar.get_date()}")
