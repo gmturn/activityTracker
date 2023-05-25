@@ -3,6 +3,7 @@ from tkinter import StringVar, Label, Entry
 from managers.EntryManager import EntryManager
 from tkinter import *
 from tkcalendar import Calendar
+from gui.Operations import getCurrentDay, getCurrentMonth, getCurrentYearYYYY, getCurrenYearYY
 
 
 class EntryManagerFrame(ctk.CTkFrame):
@@ -49,8 +50,8 @@ class EntryManagerFrame(ctk.CTkFrame):
         startDateLabel.grid(row=1, column=1, padx=50)
         self.calendar = Calendar(self.mainTabView.tab(
             "Add Entry"), selectmode='day',
-            year=2023, month=5,
-            day=22)
+            year=getCurrentYearYYYY(), month=getCurrentMonth(),
+            day=getCurrentDay())
         self.calendar.grid(row=2, column=1)
 
         startTimeLabel = ctk.CTkLabel(self.mainTabView.tab(
@@ -63,8 +64,8 @@ class EntryManagerFrame(ctk.CTkFrame):
         endDateLabel.grid(row=1, column=2, padx=50)
         self.calendar = Calendar(self.mainTabView.tab(
             "Add Entry"), selectmode='day',
-            year=2023, month=5,
-            day=22)
+            year=getCurrentYearYYYY(), month=getCurrentMonth(),
+            day=getCurrentDay())
         self.calendar.grid(row=2, column=2)
 
         # Adding Add Entry Button
