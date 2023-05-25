@@ -63,16 +63,16 @@ class EntryManagerFrame(ctk.CTkFrame):
         # Setting up a smaller frame for the start time
         self.startHourVar = ctk.IntVar()
         startTimeFrame = ctk.CTkFrame(self.mainTabView.tab("Add Entry"))
-        startHourMenu = ctk.CTkOptionMenu(
+        self.startHourMenu = ctk.CTkOptionMenu(
             startTimeFrame, values=[str(i) for i in range(1, 13)], variable=self.startHourVar)
-        startHourMenu.grid(row=0, column=0)
-        startHourMenu.set("Hour")
+        self.startHourMenu.grid(row=0, column=0)
+        self.startHourMenu.set("Hour")
 
         self.startMinuteVar = ctk.IntVar()
-        startMinuteMenu = ctk.CTkOptionMenu(
+        self.startMinuteMenu = ctk.CTkOptionMenu(
             startTimeFrame, values=[str(i) for i in range(0, 60, 5)], variable=self.startMinuteVar)
-        startMinuteMenu.grid(row=0, column=1)
-        startMinuteMenu.set("Minutes")
+        self.startMinuteMenu.grid(row=0, column=1)
+        self.startMinuteMenu.set("Minutes")
 
         self.start_am_pm = ctk.StringVar(value="am")
         start_am_pmSwitch = ctk.CTkSwitch(
@@ -89,16 +89,16 @@ class EntryManagerFrame(ctk.CTkFrame):
         endTimeFrame = ctk.CTkFrame(self.mainTabView.tab("Add Entry"))
 
         self.endHourVar = ctk.IntVar()
-        endHourMenu = ctk.CTkOptionMenu(
+        self.endHourMenu = ctk.CTkOptionMenu(
             endTimeFrame, values=[str(i) for i in range(1, 13)], variable=self.endHourVar)
-        endHourMenu.grid(row=0, column=0)
-        endHourMenu.set("Hour")
+        self.endHourMenu.grid(row=0, column=0)
+        self.endHourMenu.set("Hour")
 
         self.endMinuteVar = ctk.IntVar()
-        endMinuteMenu = ctk.CTkOptionMenu(
+        self.endMinuteMenu = ctk.CTkOptionMenu(
             endTimeFrame, values=[str(i) for i in range(0, 60, 5)], variable=self.endMinuteVar)
-        endMinuteMenu.grid(row=0, column=1)
-        endMinuteMenu.set("Minutes")
+        self.endMinuteMenu.grid(row=0, column=1)
+        self.endMinuteMenu.set("Minutes")
 
         self.end_am_pm = ctk.StringVar(value="am")
         end_am_pmSwitch = ctk.CTkSwitch(
@@ -127,3 +127,14 @@ class EntryManagerFrame(ctk.CTkFrame):
             f"Start Time: {self.startHourVar.get()}:{self.startMinuteVar.get()}{self.start_am_pm.get()} {self.startCalendar.get_date()}")
         print(
             f"End Time: {self.endHourVar.get()}:{self.endMinuteVar.get()}{self.end_am_pm.get()} {self.endCalendar.get_date()}")
+        self.activityVar.set("Choose Activity")
+        self.startHourVar.set(0)
+        self.startMinuteMenu.set(0)
+        self.endHourVar.set(0)
+        self.endMinuteVar.set(0)
+        self.start_am_pm.set("am")
+        self.end_am_pm.set("am")
+        self.startHourMenu.set("Hour")
+        self.startMinuteMenu.set("Minutes")
+        self.endHourMenu.set("Hour")
+        self.endMinuteMenu.set("Minutes")
