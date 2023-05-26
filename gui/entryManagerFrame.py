@@ -3,7 +3,8 @@ from tkinter import StringVar, Label, Entry
 from managers.EntryManager import EntryManager
 from tkinter import *
 from tkcalendar import Calendar
-from gui.Operations import getCurrentDay, getCurrentMonth, getCurrentYearYYYY, getCurrenYearYY
+from gui.Operations import getCurrentDay, getCurrentMonth, getCurrentYearYYYY, getCurrenYearYY, convert_date_format
+import datetime
 
 
 class EntryManagerFrame(ctk.CTkFrame):
@@ -122,11 +123,77 @@ class EntryManagerFrame(ctk.CTkFrame):
         button.grid(row=5, column=1, padx=20, pady=20)
 
     def getEntryDetails(self):
+        # Verify input values
+        print(convert_date_format(self.startCalendar.get_date()))
+        error_messages = self.verifyAddEntryValues()
+        if error_messages:
+            # Show error messages to the user (you might want to replace this with a more user-friendly method)
+            print(error_messages)
+            return
+
+        # Convert dates to "mm/dd/yyyy" format
+        start_date = convert_date_format(self.startCalendar.get_date())
+        end_date = convert_date_format(self.endCalendar.get_date())
+
         print(f"Activity: {self.activityVar.get()}")
         print(
-            f"Start Time: {self.startHourVar.get()}:{self.startMinuteVar.get()}{self.start_am_pm.get()} {self.startCalendar.get_date()}")
+            f"Start Time: {self.startHourVar.get()}:{self.startMinuteVar.get()}{self.start_am_pm.get()} {start_date}")
         print(
-            f"End Time: {self.endHourVar.get()}:{self.endMinuteVar.get()}{self.end_am_pm.get()} {self.endCalendar.get_date()}")
+            f"End Time: {self.endHourVar.get()}:{self.endMinuteVar.get()}{self.end_am_pm.get()} {end_date}")
+
+        self.clearAddEntryValues()
+
+    def verifyAddEntryValues(self):
+        error_messages = []
+
+        # Verify activity selection
+        if self.activityVar.get() == "Choose Activity":
+            error_messages.append("Please select an activity.")
+
+        # Verify start time selection
+        if self.startHourMenu.get() == "Hour" or self.startMinuteMenu.get() == "Minutes":
+            error_messages.append("Please select a start time.")
+
+        # Verify end time selection
+        if self.endHourMenu.get() == "Hour" or self.endMinuteMenu.get() == "Minutes":
+            error_messages.append("Please select an end time.")
+
+        # Handle case where date and/or time selections are out of range or incorrect format
+        try:
+            formatted_start_date = convert_date_format(
+                self.startCalendar.get_date())
+            formatted_end_date = convert_date_format(
+                self.endCalendar.get_date())
+            start_date = datetime.datetime.strptime(
+                formatted_start_date, "%m/%d/%Y")
+            end_date = datetime.datetime.strptime(
+                formatted_end_date, "%m/%d/%Y")
+            if start_date > end_date:
+                error_messages.append(
+                    "Start date can't be later than end date.")
+        except ValueError:
+            error_messages.append(
+                "Invalid date format. Please correct your date selections.")
+
+        try:
+            start_hour = int(self.startHourMenu.get())
+            end_hour = int(self.endHourMenu.get())
+            start_minute = int(self.startMinuteMenu.get())
+            end_minute = int(self.endMinuteMenu.get())
+            if not (0 <= start_hour <= 12) or not (0 <= end_hour <= 12) or not (0 <= start_minute <= 59) or not (0 <= end_minute <= 59):
+                error_messages.append(
+                    "Invalid time format. Please correct your time selections.")
+        except ValueError:
+            error_messages.append(
+                "Invalid time format. Please correct your time selections.")
+
+        # Return any error messages
+        if error_messages:
+            return "\n".join(error_messages)
+        else:
+            return None
+
+    def clearAddEntryValues(self):
         self.activityVar.set("Choose Activity")
         self.startHourVar.set(0)
         self.startMinuteMenu.set(0)
