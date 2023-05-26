@@ -124,7 +124,6 @@ class EntryManagerFrame(ctk.CTkFrame):
 
     def getEntryDetails(self):
         # Verify input values
-        print(convert_date_format(self.startCalendar.get_date()))
         error_messages = self.verifyAddEntryValues()
         if error_messages:
             # Show error messages to the user (you might want to replace this with a more user-friendly method)
