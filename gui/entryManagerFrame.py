@@ -118,9 +118,13 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.endCalendar.grid(row=2, column=2)
 
         # Adding Add Entry Button
-        button = ctk.CTkButton(self.mainTabView.tab(
+        addEntryButton = ctk.CTkButton(self.mainTabView.tab(
             "Add Entry"), text="Add Entry", font=ctk.CTkFont(size=18, weight="bold"), command=self.getEntryDetails)
-        button.grid(row=5, column=1, padx=20, pady=20)
+        addEntryButton.grid(row=5, column=1, padx=20, pady=20)
+
+        resetAddEntry = ctk.CTkButton(self.mainTabView.tab("Add Entry"), text="Reset Values", font=ctk.CTkFont(
+            size=18, weight="bold"), command=self.clearAddEntryValues, fg_color="#CB2400", hover_color="#7B230F")
+        resetAddEntry.grid(row=5, column=2, padx=20, pady=20)
 
     def getEntryDetails(self):
         # Verify input values
