@@ -30,6 +30,10 @@ class EntryManagerFrame(ctk.CTkFrame):
         # Formatting Tab View
         self.mainTabView.grid_columnconfigure((0, 1, 2), weight=1)
 
+        #
+        # ADD ENTRY TAB
+        #
+        #
         # Adding Add Entry Label
         addEntryLabel = ctk.CTkLabel(
             self.mainTabView.tab("Add Entry"), text="Add an Entry", font=ctk.CTkFont(size=20, weight="bold"))
@@ -125,6 +129,15 @@ class EntryManagerFrame(ctk.CTkFrame):
         resetAddEntry = ctk.CTkButton(self.mainTabView.tab("Add Entry"), text="Reset Values", font=ctk.CTkFont(
             size=18, weight="bold"), command=self.clearAddEntryValues, fg_color="#CB2400", hover_color="#7B230F")
         resetAddEntry.grid(row=5, column=2, padx=20, pady=20)
+
+        #
+        # REMOVE ENTRY TAB
+        #
+        #
+        # adding Remove Entry Label
+        removeEntryLabel = ctk.CTkLabel(self.mainTabView.tab(
+            "Remove Entry"), text="Remove an Entry", font=ctk.CTkFont(size=20, weight="bold"))
+        removeEntryLabel.grid(row=0, column=1, padx=20, pady=20)
 
     def getEntryDetails(self):
         # Verify input values
