@@ -47,9 +47,9 @@ class EntryManagerFrame(ctk.CTkFrame):
         activities.sort()
         self.activityVar = ctk.StringVar()
         self.activityVar.set("Choose Activity")
-        activityOptionMenu = ctk.CTkOptionMenu(self.mainTabView.tab("Add Entry"), dynamic_resizing=False,
-                                               values=activities, variable=self.activityVar)
-        activityOptionMenu.grid(row=2, column=0, padx=50)
+        activityComboBox = ctk.CTkComboBox(self.mainTabView.tab("Add Entry"),
+                                           values=activities, variable=self.activityVar, state="readonly")
+        activityComboBox.grid(row=2, column=0, padx=50)
 
         # Adding Start Date and Time Section
         startDateLabel = ctk.CTkLabel(self.mainTabView.tab(  # creating the label for the Start Date calendar
@@ -138,6 +138,14 @@ class EntryManagerFrame(ctk.CTkFrame):
         removeEntryLabel = ctk.CTkLabel(self.mainTabView.tab(
             "Remove Entry"), text="Remove an Entry", font=ctk.CTkFont(size=20, weight="bold"))
         removeEntryLabel.grid(row=0, column=1, padx=20, pady=20)
+
+        selectDayLabel = ctk.CTkLabel(self.mainTabView.tab(
+            "Remove Entry"), text="Select Day of Entry:")
+        selectDayLabel.grid(row=1, column=0)
+
+        self.removeEntryDay = Calendar(
+            self.mainTabView.tab("Remove Entry"), selectmode='day')
+        self.removeEntryDay.grid(row=2, column=0)
 
     def getEntryDetails(self):
         # Verify input values

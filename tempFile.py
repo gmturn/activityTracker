@@ -11,4 +11,4 @@ myEntry2 = Entry("Coding", startDateTime, endDateTime)
 
 myManager = EntryManager.EntryManager()
 
-myManager.addEntry(myEntry2)
+print(myEntry2)

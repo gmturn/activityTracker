@@ -18,11 +18,7 @@ class Entry:
         return totalDuration
 
     def __str__(self):
-        completeEntry = f"""{self.activityName}
-Start Time: {self.startDateTime}
-End Time: {self.endDateTime}
-Total Duration: {self.duration}
-"""
+        completeEntry = f"{self.activityName}: [{self.startDateTime.time().strftime('%H:%M')}-{self.endDateTime.time().strftime('%H:%M')}]"
         return completeEntry
 
     def setActivityName(self, activityName):
