@@ -23,6 +23,6 @@ def convert_date_format(date_str):
     date_obj = datetime.datetime.strptime(date_str, "%m/%d/%y")
 
     # format the date object back to a string in the desired format
-    new_date_str = date_obj.strftime("%m/%d/%Y")
+    new_date_str = date_obj.strftime("%Y-%m-%d")
 
     return new_date_str

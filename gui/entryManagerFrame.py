@@ -145,6 +145,8 @@ class EntryManagerFrame(ctk.CTkFrame):
 
         self.removeEntryDay = Calendar(
             self.mainTabView.tab("Remove Entry"), selectmode='day')
+        self.removeEntryDay.bind(
+            "<<CalendarSelected>>", self.updateRemoveEntryComboBox)
         self.removeEntryDay.grid(row=2, column=0)
 
     def getEntryDetails(self):
@@ -189,9 +191,9 @@ class EntryManagerFrame(ctk.CTkFrame):
             formatted_end_date = convert_date_format(
                 self.endCalendar.get_date())
             start_date = datetime.datetime.strptime(
-                formatted_start_date, "%m/%d/%Y")
+                formatted_start_date, "%Y-%m-%d")
             end_date = datetime.datetime.strptime(
-                formatted_end_date, "%m/%d/%Y")
+                formatted_end_date, "%Y-%m-%d")
             if start_date > end_date:
                 error_messages.append(
                     "Start date can't be later than end date.")
@@ -229,3 +231,10 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.startMinuteMenu.set("Minutes")
         self.endHourMenu.set("Hour")
         self.endMinuteMenu.set("Minutes")
+
+    def updateRemoveEntryComboBox(self, event):
+        selectedDate = convert_date_format(self.removeEntryDay.get_date())
+        entries = self.entryManager.getEntryList(
+            datetime.datetime.strptime(selectedDate, '%Y-%m-%d'))
+        for entry in entries:
+            print(entry)

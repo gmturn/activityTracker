@@ -52,6 +52,24 @@ class EntryManager:
             activities.append(activity["activity"])
         return activities
 
+    def getEntryList(self, day):
+        if not isinstance(day, datetime.datetime):
+            raise ValueError(
+                "Error: cannot return EntriesList. 'day' value is incorrect type.")
+
+        filePath = self.getEntryFilePath(day)
+        data = self.loadOrCreateData(filePath)
+
+        entryList = []
+        for item in data["entries"]:
+            activity = item["activity"]
+            startTime = datetime.datetime.strptime(item["start"], '%Y-%m-%d %H:%M:%S')
+            endTime = datetime.datetime.strptime(item["end"], '%Y-%m-%d %H:%M:%S')
+
+            entry = Entry(activity, startTime, endTime)
+            entryList.append(entry)
+        return entryList
+
     def saveActivities(self, data):
         with open(self.activitiesJSON, 'w') as file:
             json.dump(data, file, indent=2)
@@ -196,9 +214,7 @@ class EntryManager:
         return stats
 
     def updateTotalActivities(self, data):
-        numActivities = 0
-        for entry in data["entries"]:
-            numActivities += 1
+        numActivities = len(data["entries"])
         return numActivities
 
     def updateTotalDuration(self, data):
