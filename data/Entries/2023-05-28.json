@@ -1,23 +1,23 @@
 {
   "entries": [
     {
-      "activity": "Training",
-      "start": "2023-05-28 09:00:00",
-      "end": "2023-05-28 13:00:00",
-      "duration": "4:00:00"
+      "activity": "Muay Thai",
+      "start": "2023-05-28 13:30:00",
+      "end": "2023-05-28 15:30:00",
+      "duration": "2:00:00"
     }
   ],
   "stats": {
     "totalActivities": 1,
-    "totalDuration": "4:00:00",
+    "totalDuration": "2:00:00",
     "uniqueActivities": [
-      "Training"
+      "Muay Thai"
     ],
     "activityCounts": {
-      "Training": 1
+      "Muay Thai": 1
     },
     "activityDurations": {
-      "Training": "4:00:00"
+      "Muay Thai": "2:00:00"
     }
   }
 }
