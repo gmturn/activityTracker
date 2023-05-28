@@ -124,7 +124,7 @@ class EntryManagerFrame(ctk.CTkFrame):
 
         # Adding Add Entry Button
         addEntryButton = ctk.CTkButton(self.mainTabView.tab(
-            "Add Entry"), text="Add Entry", font=ctk.CTkFont(size=18, weight="bold"), command=self.getEntryDetails)
+            "Add Entry"), text="Add Entry", font=ctk.CTkFont(size=18, weight="bold"), command=self.addEntry)
         addEntryButton.grid(row=5, column=1, padx=20, pady=20)
 
         resetAddEntry = ctk.CTkButton(self.mainTabView.tab("Add Entry"), text="Reset Values", font=ctk.CTkFont(
@@ -276,8 +276,55 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.endHourMenu.set("Hour")
         self.endMinuteMenu.set("Minutes")
 
+    def getStartDateTime(self):
+        startDay = self.startCalendar.get_date()
+        startDateTime = datetime.datetime.strptime(
+            convert_date_format(startDay), '%Y-%m-%d')
+
+        # Change 12 am to 0
+        startHour = self.startHourVar.get()
+        startMinute = self.startMinuteVar.get()
+        if startHour == 12 and self.start_am_pm.get() == "am":
+            startHour = 0
+
+        # Convert time to military time
+        if self.start_am_pm.get() == "pm" and self.startHourVar.get() != 12:
+            startHour += 12
+
+        startDateTime = startDateTime.replace(
+            hour=startHour, minute=startMinute)
+        return startDateTime
+
+    def getEndDateTime(self):
+        endDay = self.endCalendar.get_date()
+        endDateTime = datetime.datetime.strptime(
+            convert_date_format(endDay), '%Y-%m-%d')
+
+        # Change 12 am to 0
+        endHour = self.endHourVar.get()
+        endMinute = self.endMinuteVar.get()
+        if endHour == 12 and self.end_am_pm.get() == "am":
+            endHour = 0
+
+        # Convert time to military time
+        if self.end_am_pm.get() == "pm" and self.endHourVar.get() != 12:
+            endHour += 12
+
+        endDateTime = endDateTime.replace(
+            hour=endHour, minute=endMinute)
+        return endDateTime
+
     def addEntry(self):
-        pass
+        errorValues = self.verifyAddEntryValues()
+        if errorValues:
+            raise ValueError(
+                "Error: Cannot add entry. Selected values are incorrect.")
+
+        activity = self.activityVar.get()
+        startDateTime = self.getStartDateTime()
+        endDateTime = self.getEndDateTime()
+        print(startDateTime)
+        print(endDateTime)
 
     def getEntriesOnSelectedDay(self):
         selectedDate = convert_date_format(self.removeEntryDay.get_date())
