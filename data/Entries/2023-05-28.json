@@ -1,0 +1,23 @@
+{
+  "entries": [
+    {
+      "activity": "Coding",
+      "start": "2023-05-28 02:00:00",
+      "end": "2023-05-28 04:30:00",
+      "duration": "2:30:00"
+    }
+  ],
+  "stats": {
+    "totalActivities": 1,
+    "totalDuration": "2:30:00",
+    "uniqueActivities": [
+      "Coding"
+    ],
+    "activityCounts": {
+      "Coding": 1
+    },
+    "activityDurations": {
+      "Coding": "2:30:00"
+    }
+  }
+}

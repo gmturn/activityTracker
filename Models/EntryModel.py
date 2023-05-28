@@ -21,6 +21,14 @@ class Entry:
         completeEntry = f"{self.activityName}: [{self.startDateTime.time().strftime('%H:%M')}-{self.endDateTime.time().strftime('%H:%M')}]"
         return completeEntry
 
+    def showExpandedDetails(self):
+        fullText = f"""Activity Name: {self.activityName}
+Date: {datetime.datetime.strftime(self.startDateTime, '%m/%d/%Y')}
+Start Time: {datetime.datetime.strftime(self.startDateTime, '%I:%M %p')}
+End Time: {datetime.datetime.strftime(self.endDateTime, '%I:%M %p')}
+Duration: {self.duration}"""
+        return fullText
+
     def setActivityName(self, activityName):
         self.activityName = activityName
 
