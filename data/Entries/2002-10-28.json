@@ -11,31 +11,22 @@
       "start": "2002-10-28 09:00:00",
       "end": "2002-10-28 11:30:00",
       "duration": "2:30:00"
-    },
-    {
-      "activity": "Video Games",
-      "start": "2002-10-28 23:40:00",
-      "end": "2002-10-28 23:59:59",
-      "duration": "0:19:59"
     }
   ],
   "stats": {
-    "totalActivities": 3,
-    "totalDuration": "3:24:59",
+    "totalActivities": 2,
+    "totalDuration": "3:05:00",
     "uniqueActivities": [
       "Muay Thai",
-      "Weight Lifting",
-      "Video Games"
+      "Weight Lifting"
     ],
     "activityCounts": {
       "Muay Thai": 1,
-      "Weight Lifting": 1,
-      "Video Games": 1
+      "Weight Lifting": 1
     },
     "activityDurations": {
       "Muay Thai": "0:35:00",
-      "Weight Lifting": "2:30:00",
-      "Video Games": "0:19:59"
+      "Weight Lifting": "2:30:00"
     }
   }
 }

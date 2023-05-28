@@ -147,7 +147,7 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.removeEntryDay = Calendar(
             self.mainTabView.tab("Remove Entry"), selectmode='day')
         self.removeEntryDay.bind(
-            "<<CalendarSelected>>", self.updateRemoveEntryComboBox)
+            "<<CalendarSelected>>", self.updateRemoveEntryListbox)
         self.removeEntryDay.grid(row=2, column=0)
 
         existingEntriesLabel = ctk.CTkLabel(self.mainTabView.tab(
@@ -175,7 +175,7 @@ class EntryManagerFrame(ctk.CTkFrame):
 
         # Configure the Scrollbar to scroll the Listbox
         self.removeEntryScrollbar.config(command=self.removeEntryListbox.yview)
-        self.updateRemoveEntryComboBox()
+        self.updateRemoveEntryListbox()
 
         # Creating the Expanded Details section
         fullActivityLabel = ctk.CTkLabel(
@@ -188,6 +188,10 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.removeEntryTextBox.insert(
             "0.0", "Expanded details of the selected entry will be shown here.")
         self.removeEntryTextBox.grid(row=2, column=2)
+
+        removeEntryButton = ctk.CTkButton(self.mainTabView.tab("Remove Entry"), text="Remove Entry", font=ctk.CTkFont(
+            size=18, weight="bold"), command=self.removeEntry, fg_color="#CB2400", hover_color="#7B230F")
+        removeEntryButton.grid(row=3, column=1)
 
     def getEntryDetails(self):
         # Verify input values
@@ -272,6 +276,9 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.endHourMenu.set("Hour")
         self.endMinuteMenu.set("Minutes")
 
+    def addEntry(self):
+        pass
+
     def getEntriesOnSelectedDay(self):
         selectedDate = convert_date_format(self.removeEntryDay.get_date())
         entries = self.entryManager.getEntryList(
@@ -281,15 +288,19 @@ class EntryManagerFrame(ctk.CTkFrame):
             values.append(entry)
         return values
 
-    def updateRemoveEntryComboBox(self, event=None):
+    def updateRemoveEntryListbox(self, event=None):
         values = self.getEntriesOnSelectedDay()
         self.removeEntryListbox.delete(0, 'end')
         for i in range(0, len(values)):
             self.removeEntryListbox.insert(i + 1, values[i])
 
-    def showSelectedEntry(self, event):
-        # Get selected line index
+    def getListBoxIndex(self):
         index = self.removeEntryListbox.curselection()[0]
+        return index
+
+    def showSelectedEntry(self, event=None):
+        # Get selected line index
+        index = self.getListBoxIndex()
         entries = self.getEntriesOnSelectedDay()
         expandedDetails = entries[index].showExpandedDetails()
 
@@ -298,3 +309,22 @@ class EntryManagerFrame(ctk.CTkFrame):
         self.removeEntryTextBox.insert(
             "0.0", expandedDetails)
         self.removeEntryTextBox.configure(state="disabled")
+
+    def verifyRemoveEntry(self):
+        index = self.removeEntryListbox.curselection()
+        if index:
+            return True
+
+        else:
+            return False
+
+    def removeEntry(self):
+        if not self.verifyRemoveEntry():
+            print("Error: cannot remove a non-selected entry.")
+            return
+
+        index = self.getListBoxIndex()
+        entries = self.getEntriesOnSelectedDay()
+        self.entryManager.removeEntry(entries[index])
+        self.updateRemoveEntryListbox()
+        self.showSelectedEntry()
