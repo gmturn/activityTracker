@@ -1,11 +1,11 @@
 import customtkinter as ctk
-from tkinter import StringVar, Label, Entry
 from managers.EntryManager import EntryManager
 from tkinter import *
 import tkinter as tk
 from tkcalendar import Calendar
 from gui.Operations import getCurrentDay, getCurrentMonth, getCurrentYearYYYY, getCurrenYearYY, convert_date_format
 import datetime
+from Models import EntryModel
 
 
 class EntryManagerFrame(ctk.CTkFrame):
@@ -323,8 +323,9 @@ class EntryManagerFrame(ctk.CTkFrame):
         activity = self.activityVar.get()
         startDateTime = self.getStartDateTime()
         endDateTime = self.getEndDateTime()
-        print(startDateTime)
-        print(endDateTime)
+        newEntry = EntryModel.Entry(activity, startDateTime, endDateTime)
+        self.entryManager.addEntry(newEntry)
+        self.clearAddEntryValues()
 
     def getEntriesOnSelectedDay(self):
         selectedDate = convert_date_format(self.removeEntryDay.get_date())
